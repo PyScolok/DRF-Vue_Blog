@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'blogApp.apps.BlogappConfig',
     'rest_framework',
     'corsheaders',
+    'ckeditor',
+    'ckeditor_uploader',
 
 ]
 
@@ -124,10 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_DIR = str(BASE_DIR / 'static')
-STATICFILES_DIRS = [
-    STATIC_DIR, 
-]
+STATIC_ROOT = str(BASE_DIR / 'static')
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = str(BASE_DIR / 'media')

@@ -1,3 +1,91 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.urls import reverse
 
-# Create your models here.
+class Category(models.Model):
+    """Категории"""
+
+    name = models.CharField(max_length=75, verbose_name="Название")
+    slug = models.SlugField(max_length=75, verbose_name="URL", unique=True)
+    
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("category", kwargs={"slug": self.slug})
+
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+
+class Tag(models.Model):
+    """Теги"""
+
+    name = models.CharField(max_length=75, verbose_name="Название")
+    slug = models.SlugField(max_length=75, verbose_name="URL", unique=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse("tag", kwargs={"slug": self.slug})
+
+    class Meta:
+        verbose_name = "Тег"
+        verbose_name_plural = "Теги"
+
+
+class Post(models.Model):
+    """Посты"""
+
+    title = models.CharField(max_length=100, verbose_name="Заголовок")
+    slug = models.SlugField(max_length=100, verbose_name="URL", unique=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор", related_name="posts")
+    content = models.TextField(verbose_name="Контент")
+    image = models.ImageField(upload_to="images/%Y/%m/%d/", blank=True, verbose_name="Изображение")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория", related_name="posts")
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги")
+    views = models.IntegerField(default=0, verbose_name="Просмотров")
+    publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
+    update = models.DateTimeField(auto_now=True, verbose_name="Обновлен")
+    is_draft = models.BooleanField(default=False, verbose_name="Черновик?")
+
+    def __str__(self):
+        return self.title
+    
+    def get_absolute_url(self):
+        return reverse("post", kwargs={"slug": self.slug})
+    
+    class Meta:
+        verbose_name = "Пост"
+        verbose_name_plural = "Посты"
+    
+
+class Like(models.Model):
+    """Лайки"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="likes")
+    ip = models.GenericIPAddressField(verbose_name="IP")
+
+    class Meta:
+        verbose_name = "Лайк"
+        verbose_name_plural = "Лайки"
+    
+
+class Comment(models.Model):
+    """Комментарии"""
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="comments")
+    author = models.CharField(max_length=75, verbose_name="Автор")
+    text = models.TextField(verbose_name="Текст")
+    publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name="Родитель", related_name="children")
+
+    def __str__(self):
+        return f"Комментарий {self.author} к {self.post}"
+    
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+        ordering = ["publish"]

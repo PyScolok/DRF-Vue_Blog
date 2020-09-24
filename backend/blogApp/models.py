@@ -56,6 +56,9 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse("post", kwargs={"slug": self.slug})
+
+    def get_author_name(self):
+        return self.author.username
     
     class Meta:
         verbose_name = "Пост"
@@ -80,7 +83,7 @@ class Comment(models.Model):
     author = models.CharField(max_length=75, verbose_name="Автор")
     text = models.TextField(verbose_name="Текст")
     publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name="Родитель", related_name="children")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name="Родитель", related_name="children")
 
     def __str__(self):
         return f"Комментарий {self.author} к {self.post}"

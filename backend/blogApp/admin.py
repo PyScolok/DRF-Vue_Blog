@@ -23,6 +23,7 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ("title", "author__username")
     prepopulated_fields = {"slug": ("title", )}
     form = PostAdminForm
+    save_as = True
 
     def get_image(self, obj):
         if obj.image:

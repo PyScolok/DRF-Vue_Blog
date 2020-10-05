@@ -10,14 +10,27 @@ class MainView(APIView):
     """Начальная страница"""
 
     def get(self, request):
-        posts = Post.objects.all()[:8]
-        categories = Category.objects.all()
+        if request.GET.get('count'):
+            count = int(request.GET.get('count'))
+        else:
+            count = 0
+        posts = Post.objects.all()[count:count + 4]
         posts_serializer = PostListSerializer(posts, many=True)
-        categories_serializer = CategorySerializer(categories, many=True)
         return Response({
             "posts": posts_serializer.data,
+        })
+
+
+class CategoriesListView(APIView):
+    """Список категорий"""
+
+    def get(self, request):
+        categories = Category.objects.all()
+        categories_serializer = CategoryListSerializer(categories, many=True)
+        return Response({
             "categories": categories_serializer.data,
         })
+
 
 
 class PostDetailView(APIView):

@@ -7,10 +7,10 @@
                         <div class="col-md-3">
                             <div class="single-post">
                                 <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
-                                <h3><a @click="goTo(post.slug)" href="#">{{ post.title }}</a></h3>
+                                <h3><a @click="goTo(post.slug)">{{ post.title }}</a></h3>
                                 <h4><span>Posted By: <span class="author-name">{{ post.author }}</span></span></h4>
                                 <span v-html="post.content"></span>
-                                <span><a class="post-button" href="#">Read more...</a></span>
+                                <span><a  @click="goTo(post.slug)" class="post-button">Read more...</a></span>
                                 <h4><span>{{ dateFormat(post.publish) }}</span></h4>
                             </div>
                         </div>
@@ -21,16 +21,16 @@
                         <div class="col-md-3">
                             <div class="single-post">
                                 <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
-                                <h3><a href="#">{{ post.title }}</a></h3>
+                                <h3><a  @click="goTo(post.slug)">{{ post.title }}</a></h3>
                                 <h4><span>Posted By: <span class="author-name">{{ post.author }}</span></span></h4>
                                 <span v-html="post.content"></span>
-                                <span><a class="post-button" href="#">Read more...</a></span>
+                                <span><a  @click="goTo(post.slug)" class="post-button">Read more...</a></span>
                                 <h4><span>{{ dateFormat(post.publish) }}</span></h4>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button v-on:click="loadAdditionalPosts">addPosts</button>
+                <button class="addPosts" @click="loadAdditionalPosts">More posts</button>
             </div>
         </section>
     </div>
@@ -103,10 +103,13 @@
         overflow: hidden;
     }
 
+    .single-post a {
+        cursor: pointer;
+    }
+
     .single-post img {
         margin-bottom: 25px;
     }
-
 
     .post-button {
         color: #061e37;
@@ -114,5 +117,22 @@
         font-family: Geometria;
         font-size: 15px;
         font-weight: bold;
+        cursor: pointer;
+    }
+
+    .addPosts {
+        position: relative;
+        display: block;
+        background: #40c4ff;
+        color: #fff;
+        font-family: "Raleway", sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0 auto;
+        padding: 26px 50px;
+        border: none;
+        text-transform: uppercase;
+        outline: none;
+        
     }
 </style>

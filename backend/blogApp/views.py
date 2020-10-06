@@ -34,12 +34,23 @@ class CategoriesListView(APIView):
 
 
 class PostDetailView(APIView):
-    """Подробное представление поста"""
+    """Страница подробного представление поста"""
 
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
-        serializer = PostDetailSerializer(post)
-        return Response(serializer.data)
+        tags = Tag.objects.all()
+        recent_posts = Post.objects.all()[:5]
+        popular_posts = Post.objects.all().order_by('views')[:5]
+        post_serializer = PostDetailSerializer(post)
+        tags_seerializer = TagListSerializer(tags, many=True)
+        recent_posts_serializer = PostListSerializer(recent_posts, many=True)
+        popular_posts_serializer = PostListSerializer(popular_posts, many=True)
+        return Response({
+            "post": post_serializer.data,
+            "tags": tags_seerializer.data,
+            "recent_posts": recent_posts_serializer.data,
+            "popular_posts": popular_posts_serializer.data,
+        })
 
 
 class PostsByCategoryView(APIView):

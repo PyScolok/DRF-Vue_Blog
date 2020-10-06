@@ -35,6 +35,14 @@ class CommentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ["author", "text", "publish"]
+    
+
+class LikeListSerializer(serializers.ModelSerializer):
+    """Лайки к посту"""
+
+    class Meta:
+        model = Like
+        fields = "__all__"
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
@@ -44,6 +52,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     category = CategoryListSerializer()
     tags = TagListSerializer(many=True)
     comments = CommentListSerializer(many=True)
+    likes = LikeListSerializer(many=True)
 
     class Meta:
         model = Post

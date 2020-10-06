@@ -350,8 +350,8 @@ section.blog-post-area h4 span.author-name {
     font-family: Geometria;
     font-size: 38px;
     font-weight: 500;
-    margin-bottom: 60px;
-    margin-top: 45px;
+    margin-bottom: 15px;
+    margin-top: 40px;
 }
 
 .single-blog-area p {
@@ -364,7 +364,7 @@ section.blog-post-area h4 span.author-name {
 }
 
 .single-blog-area .blog-area-part p {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 .single-blog-area .for-style {

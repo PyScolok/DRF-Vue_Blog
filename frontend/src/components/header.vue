@@ -11,7 +11,7 @@
                     <div class="col-md-10">
                         <div class="menu">
                             <div class="nav">
-                                <a class="nav-item" href="">Home</a>
+                                <a class="nav-item" href="/">Home</a>
                                 <a class="nav-item" href="">Categories ▼
                                     <div class="dropdown">
                                         <a v-for="category in categories" :key="category.id" class="nav-item last" href="">{{ category.name }}</a>

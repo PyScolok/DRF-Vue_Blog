@@ -2,15 +2,26 @@
   <div class="wrapper" id="sidebar">
         <div class="col-md-4">
             <div class="button-group filters-button-group">
-                <button class="button is-checked">Recent</button>
-                <button class="button">popular</button>
+                <button @click="recentListActivate()" v-bind:class="{ 'is-checked': recentList }" class="button">Recent</button>
+                <button @click="popularListActivate()" v-bind:class="{ 'is-checked': popularList }" class="button">popular</button>
             </div>
-            <div class="grid">
-                <div class="portfolio-item recent">
-                    <img src="img/portfolio1.jpg" alt="">
+            <div v-if="recentList" class="grid">
+                <div v-for="post in recentPosts" :key="post.id" class="portfolio-item recent">
+                    <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
+                    <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
                     <div class="portfolio-text">
-                        <h5><a href="#">Pay Close Attention To People Who Don’t Clap When You Win recent1.</a></h5> 
-                        <p>By Kabbo Liate <span>|</span>25 February 2017</p>
+                        <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
+                        <p>By {{ post.author }} <span>|</span>{{ dateFormat(post.publish) }}</p>
+                    </div>
+                </div>
+            </div>
+            <div v-if="popularList" class="grid">
+                <div v-for="post in popularPosts" :key="post.id" class="portfolio-item recent">
+                    <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
+                    <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
+                    <div class="portfolio-text">
+                        <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
+                        <p>By {{ post.author }} <span> | <i class="fa fa-eye" aria-hidden="true"></i> {{ post.views }}</span></p>
                     </div>
                 </div>
             </div>
@@ -32,17 +43,40 @@
 <script>
 export default {
     name: 'Sidebar',
-    props: ['tags', ],
+    props: ['tags', 'recentPosts', 'popularPosts'],
     data() {
         return {
+            recentList: true,
+            popularList: false,
 
         }
     },
     created() {
-        console.log(this.tags)
+        
 
     },
     methods: {
+        goTo(slug) {
+            this.$router.push({name: 'Single', params: {slug: slug}})
+        },
+        dateFormat(value) {
+            let options = {
+                year: 'numeric',
+                month: 'numeric',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            }
+            return new Date(value).toLocaleString("en", options);
+        },
+        recentListActivate() {
+            this.recentList  = !this.recentList;
+            this.popularList = !this.popularList;
+        },
+        popularListActivate() {
+            this.recentList  = !this.recentList;
+            this.popularList = !this.popularList;
+        },
 
     }
 
@@ -50,5 +84,16 @@ export default {
 </script>
 
 <style>
+    .button-group button {
+        outline: none;
+    }
+
+    .portfolio-text h5 {
+        cursor: pointer;
+    }
+
+    i {
+        margin-left: 10px;
+    }
 
 </style>

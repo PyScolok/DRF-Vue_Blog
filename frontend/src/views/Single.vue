@@ -15,8 +15,8 @@
                                         <div class="tags">
                                             <p v-for="tag in post.tags" :key="tag.id"><a href="#">{{ tag.name }}</a></p>
                                         </div>
-                                        <div class="info">
-                                            <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ dateFormat(post.publish) }}</span> in <a class="category">{{ post.category['name'] }}</a></h4>
+                                        <div v-if="loading" class="info">
+                                            <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ dateFormat(post.publish) }}</span> in <a class="category">{{ post.category.name }}</a></h4>
                                             <h4><span>update: </span><span> {{ dateFormat(post.update) }}</span></h4>
                                             <div class="feedback">
                                                 <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes.length }}</span></p>
@@ -30,7 +30,7 @@
                                     <Comments />
                                 </div>
                             </div>
-                            <Sidebar :tags="tags"/>
+                            <Sidebar :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,8 @@
                post: {},
                recentPosts: [],
                popularPosts: [],
-               tags: []
+               tags: [],
+               loading: false,
            }
         },
         components: {
@@ -61,15 +62,20 @@
         created() {
             this.loadPost();
             
+            
         },
         methods: {
            async loadPost() {
                let rSinglePostPage = await fetch(
                     `${this.$store.getters.getServerUrl}/post/${this.slug}`
-                ).then(response => response.json())
-                this.post = rSinglePostPage['post'] 
-                this.tags = rSinglePostPage['tags']
-                console.log(rSinglePostPage)
+                ).then(response => response.json());
+                this.post = rSinglePostPage['post'];
+                this.tags = rSinglePostPage['tags'];
+                this.recentPosts = rSinglePostPage['recent_posts'];
+                this.popularPosts = rSinglePostPage['popular_posts'];
+                this.loading = true;
+                console.log(rSinglePostPage['popular_posts'])
+
             },
             dateFormat(value) {
                 let options = {

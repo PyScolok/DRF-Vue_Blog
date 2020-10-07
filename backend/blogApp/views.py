@@ -39,8 +39,8 @@ class PostDetailView(APIView):
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
         tags = Tag.objects.all()
-        recent_posts = Post.objects.all()[:5]
-        popular_posts = Post.objects.all().order_by('views')[:5]
+        recent_posts = Post.objects.all().order_by('-publish')[:5]
+        popular_posts = Post.objects.all().order_by('-views')[:5]
         post_serializer = PostDetailSerializer(post)
         tags_seerializer = TagListSerializer(tags, many=True)
         recent_posts_serializer = PostListSerializer(recent_posts, many=True)

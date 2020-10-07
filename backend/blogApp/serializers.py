@@ -10,7 +10,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        exclude = ["views", "category", "tags", "is_draft", ]
+        exclude = ["category", "tags", "is_draft", ]
 
 
 class CategoryListSerializer(serializers.ModelSerializer):

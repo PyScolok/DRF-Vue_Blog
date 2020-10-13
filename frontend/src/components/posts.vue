@@ -11,7 +11,7 @@
                                 <h4><span>Posted By: <span class="author-name">{{ post.author }}</span></span></h4>
                                 <span v-html="post.content"></span>
                                 <span><a  @click="goTo(post.slug)" class="post-button">Read more...</a></span>
-                                <h4><span>{{ dateFormat(post.publish) }}</span></h4>
+                                <h4><span>{{ post.publish }}</span></h4>
                             </div>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                                 <h4><span>Posted By: <span class="author-name">{{ post.author }}</span></span></h4>
                                 <span v-html="post.content"></span>
                                 <span><a  @click="goTo(post.slug)" class="post-button">Read more...</a></span>
-                                <h4><span>{{ dateFormat(post.publish) }}</span></h4>
+                                <h4><span>{{ post.publish }}</span></h4>
                             </div>
                         </div>
                     </div>
@@ -55,16 +55,6 @@
             window.removeEventListener('resize', this.activateMasonry);
         },
         methods: {
-            dateFormat(value) {
-                let options = {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                }
-                return new Date(value).toLocaleString("en", options);
-            },
             async loadListPosts() {
                 let listPosts = await fetch(
                     `${this.$store.getters.getServerUrl}/main`

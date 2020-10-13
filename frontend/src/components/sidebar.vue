@@ -11,7 +11,7 @@
                     <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
                     <div class="portfolio-text">
                         <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
-                        <p>By {{ post.author }} <span>|</span>{{ dateFormat(post.publish) }}</p>
+                        <p>By {{ post.author }} <span>|</span>{{ post.publish }}</p>
                     </div>
                 </div>
             </div>
@@ -48,6 +48,7 @@ export default {
         return {
             recentList: true,
             popularList: false,
+            post: {},
 
         }
     },
@@ -56,18 +57,16 @@ export default {
 
     },
     methods: {
+        async loadPost(slug) {
+            let post = await fetch(
+                `${this.$store.getters.getServerUrl}/post/${slug}`
+            ).then(response => response.json())
+            this.post = post['post']
+            this.$emit('loadPost', {post: this.post})
+        },
         goTo(slug) {
             this.$router.push({name: 'Single', params: {slug: slug}})
-        },
-        dateFormat(value) {
-            let options = {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-            }
-            return new Date(value).toLocaleString("en", options);
+            this.loadPost(slug)
         },
         recentListActivate() {
             this.recentList  = !this.recentList;

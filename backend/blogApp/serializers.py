@@ -29,12 +29,36 @@ class TagListSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RecursiveChildrenSerializer(serializers.Serializer):
+    """
+    Рекурсивный вывод вложенных комментариев    
+    """
+
+    def to_representation(self, value):
+        serializer = self.parent.parent.__class__(value, context=self.context)
+        return serializer.data
+
+
+class FilterCommentListSerializer(serializers.ListSerializer):
+    """
+    Фильтрация комментов по наличию родителя
+    """
+    
+    def to_representation(self, data):
+        data = data.filter(parent=None)
+        return super().to_representation(data)
+
+
 class CommentListSerializer(serializers.ModelSerializer):
     """Комментари к посту"""
 
+    children = RecursiveChildrenSerializer(many=True)
+
+
     class Meta:
+        list_serializer_class = FilterCommentListSerializer 
         model = Comment
-        fields = ["author", "text", "publish"]
+        fields = ["author", "text", "publish", 'children', 'parent']
     
 
 class LikeListSerializer(serializers.ModelSerializer):

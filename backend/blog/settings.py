@@ -140,6 +140,13 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:8000",
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DATETIME_FORMAT': "%d %B %Y  %I:%M%p",
+}
+
 
 # ckeditor settings
 CKEDITOR_UPLOAD_PATH = 'uploads/'

@@ -15,6 +15,12 @@ class PostAdminForm(forms.ModelForm):
         fields = "__all__"
 
 
+class CommentInline(admin.TabularInline):
+    """Редактор комментариев на панели поста"""
+
+    model = Comment
+
+
 class PostAdmin(admin.ModelAdmin):
     """Посты"""
 
@@ -22,6 +28,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ("category", )
     search_fields = ("title", "author__username")
     prepopulated_fields = {"slug": ("title", )}
+    inlines = [CommentInline]
     form = PostAdminForm
     save_as = True
 

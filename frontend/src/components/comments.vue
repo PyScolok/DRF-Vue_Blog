@@ -4,66 +4,55 @@
         <h3>Comments</h3>
 
         <ul class="commentlist">
-            <li>
+            <li v-for="comment in comments" :key="comment.id">
                 <article class="comment">
                     <header class="comment-author">
                         <img src="img/author-1.jpg" alt="">
                     </header>
                     <section class="comment-details">
                         <div class="author-name">
-                            <h5><a href="#">Selina Gomez</a></h5>
-                            <p>February 25 2017</p>
+                            <h5>{{ comment.author }}</h5>
+                            <p>{{ comment.publish }}</p>
                         </div>
                         <div class="comment-body">
-                            <p>is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard </p>
+                            <p>{{ comment.text }}</p>
                         </div>
                         <div class="reply">
-                            <p><span><a href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>12</span><span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a>7</span></p>
+                            <p>
+                                <span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
+                                <span v-if="comment.children">{{ comment.children.length }}</span>
+                                <span v-else>0</span>
+                            </p>
                         </div>
                     </section>
                 </article>
-
-                <ul class="children">
-                    <li>
-                        <article class="comment">
-                            <header class="comment-author">
-                                <img src="img/author-2.jpg" alt="">
-                            </header>
-                            <section class="comment-details">
-                                <div class="author-name">
-                                    <h5><a href="#">Khalid Hasan Zibon</a></h5>
-                                    <p>February 25 2017</p>
-                                </div>
-                                <div class="comment-body">
-                                    <p>is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard </p>
-                                </div>
-                                <div class="reply">
-                                    <p><span><a href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>12</span><span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a>7</span></p>
-                                </div>
-                            </section>
-                        </article>
-                    </li>
-                </ul>
-
-            </li>
-            <li>
-                <article class="comment">
-                    <header class="comment-author">
-                        <img src="img/author-3.jpg" alt="">
-                    </header>
-                    <section class="comment-details">
-                        <div class="author-name">
-                            <h5><a href="#">Heath Ledger</a></h5>
-                            <p>February 25 2017</p>
-                        </div>
-                        <div class="comment-body">
-                            <p>is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard </p>
-                        </div>
-                        <div class="reply">
-                            <p><span><a href="#"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>12</span><span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a>7</span></p>
-                        </div>
-                    </section>
-                </article>
+                <div v-if="comment.children">
+                    <ul  v-for="childComment in allCommentsRepresentation(comment.children)" :key="childComment.id" class="children">
+                        <li>
+                            <article class="comment">
+                                <header class="comment-author">
+                                    <img src="img/author-2.jpg" alt="">
+                                </header>
+                                <section class="comment-details">
+                                    <div class="author-name">
+                                        <h5>{{ childComment.author }} <span>replied to {{ childComment.parent }}</span></h5>
+                                        <p>{{ childComment.publish }}</p>
+                                    </div>
+                                    <div class="comment-body">
+                                        <p>{{ childComment.text }}</p>
+                                    </div>
+                                    <div class="reply">
+                                        <p>
+                                            <span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
+                                            <span v-if="childComment.children">{{ childComment.children.length }}</span>
+                                            <span v-else>0</span>
+                                        </p>
+                                    </div>
+                                </section>
+                            </article>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
 
@@ -71,9 +60,6 @@
     <form action="#" method="get">
         <div class="name">
             <input type="text" name="" id="" placeholder="Name" class="name">
-        </div>
-        <div class="email">
-            <input type="email" name="" id="" placeholder="Email" class="email">
         </div>
         <div class="comment">
             <input type="text" name="" id="" placeholder="Comment" class="comment">
@@ -88,11 +74,44 @@
 
 <script>
 export default {
-    name: 'Comments'
-
+    name: 'Comments',
+    props: {
+        comments: Array,
+        
+    },
+    data() {
+        return {
+            currentComments: [],
+        }
+    },
+    created() {
+    },
+    methods:{
+        allCommentsRepresentation(comments) {
+            let allComments = [];
+            for (let comment of comments) {
+                allComments.push(comment)
+                if (comment.children.length > 0) {
+                    allComments = allComments.concat(this.allCommentsRepresentation(comment.children))
+                }
+            }
+            return allComments;
+        }
+    },
 }
 </script>
 
 <style>
+    .reply span {
+        margin: 0 !important;
+    }
+
+    .author-name h5 {
+        color: #000;
+        font-family: Geometria;
+        font-size: 21px;
+        font-weight: 500;
+        line-height: 10px;
+    }
 
 </style>

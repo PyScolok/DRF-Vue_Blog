@@ -16,8 +16,8 @@
                                             <p v-for="tag in post.tags" :key="tag.id"><a href="#">{{ tag.name }}</a></p>
                                         </div>
                                         <div v-if="loading" class="info">
-                                            <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ dateFormat(post.publish) }}</span> in <a class="category">{{ post.category.name }}</a></h4>
-                                            <h4><span>update: </span><span> {{ dateFormat(post.update) }}</span></h4>
+                                            <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ post.publish }}</span> in <a class="category">{{ post.category.name }}</a></h4>
+                                            <h4><span>update: </span><span> {{ post.update }}</span></h4>
                                             <div class="feedback">
                                                 <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes.length }}</span></p>
                                                 <p class="feedback-item"><span><i class="fa fa-eye" aria-hidden="true"></i> {{ post.views }}</span></p>
@@ -27,10 +27,10 @@
                                         
                                         <div class="content" v-html="post.content"></div>
                                     </div>
-                                    <Comments />
+                                    <Comments :comments="post.comments" />
                                 </div>
                             </div>
-                            <Sidebar :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
+                            <Sidebar @loadPost='changePostData' :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
                         </div>
                     </div>
                 </div>
@@ -74,19 +74,11 @@
                 this.recentPosts = rSinglePostPage['recent_posts'];
                 this.popularPosts = rSinglePostPage['popular_posts'];
                 this.loading = true;
-                console.log(rSinglePostPage['popular_posts'])
-
+                console.log(this.post)
             },
-            dateFormat(value) {
-                let options = {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                }
-                return new Date(value).toLocaleString("en", options);
-            },
+            changePostData(data) {
+                this.post = data['post']
+            }
             
         },
     }
@@ -126,6 +118,10 @@
         position: absolute;
         width: 100%;
         bottom: 0;
+    }
+
+    .author-name {
+        font-weight: bold;
     }
 
     .feedback {

@@ -87,7 +87,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Комментарий {self.author} к {self.post}"
-    
+
+    def get_parent_comment_author(self):
+        if self.parent:
+            return self.parent.author
+
     class Meta:
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"

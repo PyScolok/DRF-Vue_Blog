@@ -21,7 +21,7 @@
                                             <div class="feedback">
                                                 <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes.length }}</span></p>
                                                 <p class="feedback-item"><span><i class="fa fa-eye" aria-hidden="true"></i> {{ post.views }}</span></p>
-                                                <p class="feedback-item"><span><i class="fa fa-comments" aria-hidden="true"></i> {{ post.comments.length }}</span></p>
+                                                <p class="feedback-item"><span><i class="fa fa-comments" aria-hidden="true"></i> {{ getCommentsCount(post.comments) }}</span></p>
                                             </div>
                                         </div>
                                         
@@ -78,6 +78,16 @@
             },
             changePostData(data) {
                 this.post = data['post']
+            },
+            getCommentsCount(comments) {
+                let commentsCount = 0;
+                for (let comment of comments) {
+                    commentsCount ++
+                    if (comment.children.length > 0) {
+                        commentsCount += this.getCommentsCount(comment.children)
+                    }
+                }
+                return commentsCount;
             }
             
         },

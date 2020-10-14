@@ -53,6 +53,7 @@ class CommentListSerializer(serializers.ModelSerializer):
     """Комментари к посту"""
 
     children = RecursiveChildrenSerializer(many=True)
+    parent = serializers.CharField(source="get_parent_comment_author")
 
 
     class Meta:

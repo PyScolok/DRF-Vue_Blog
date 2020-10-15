@@ -62,6 +62,16 @@ class CommentListSerializer(serializers.ModelSerializer):
         fields = ["author", "text", "publish", 'children', 'parent']
     
 
+class CommentCreateSerializer(serializers.ModelSerializer):
+    """
+    Добавление комментария
+    """
+    
+    class Meta:
+        model = Comment
+        fields = "__all__"
+
+
 class LikeListSerializer(serializers.ModelSerializer):
     """Лайки к посту"""
 

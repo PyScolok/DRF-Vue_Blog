@@ -27,7 +27,7 @@
                                         
                                         <div class="content" v-html="post.content"></div>
                                     </div>
-                                    <Comments :comments="post.comments" />
+                                    <Comments @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
                                 </div>
                             </div>
                             <Sidebar @loadPost='changePostData' :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
@@ -47,6 +47,7 @@
         props: ['slug'],
         data() {
            return {
+               postSlug: this.slug,
                post: {},
                recentPosts: [],
                popularPosts: [],
@@ -66,18 +67,18 @@
         },
         methods: {
            async loadPost() {
-               let rSinglePostPage = await fetch(
-                    `${this.$store.getters.getServerUrl}/post/${this.slug}`
+               let singlePostPage = await fetch(
+                    `${this.$store.getters.getServerUrl}/post/${this.postSlug}`
                 ).then(response => response.json());
-                this.post = rSinglePostPage['post'];
-                this.tags = rSinglePostPage['tags'];
-                this.recentPosts = rSinglePostPage['recent_posts'];
-                this.popularPosts = rSinglePostPage['popular_posts'];
+                this.post = singlePostPage['post'];
+                this.tags = singlePostPage['tags'];
+                this.recentPosts = singlePostPage['recent_posts'];
+                this.popularPosts = singlePostPage['popular_posts'];
                 this.loading = true;
-                console.log(this.post)
             },
             changePostData(data) {
-                this.post = data['post']
+                this.postSlug = data['slug']
+                this.loadPost()
             },
             getCommentsCount(comments) {
                 let commentsCount = 0;

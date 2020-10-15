@@ -53,6 +53,18 @@ class PostDetailView(APIView):
         })
 
 
+class CommentCreateView(APIView):
+    """
+    Добавление комментария
+    """
+    
+    def post(self, request):
+        comment = CommentCreateSerializer(data=request.data)
+        if comment.is_valid():
+            comment.save()
+        return Response(status=201)
+
+
 class PostsByCategoryView(APIView):
     """Список постов относящихся к оперделенной категории"""
 

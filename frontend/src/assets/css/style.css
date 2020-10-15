@@ -618,7 +618,7 @@ section.blog-post-area h4 span.author-name {
     position: absolute;
     right: 0;
 }
-.single-blog-area form .post input[type="submit"] {
+.single-blog-area form .post input[type="button"] {
     background: #40c4ff none repeat scroll 0 0;
     bottom: 0;
     color: #fff;

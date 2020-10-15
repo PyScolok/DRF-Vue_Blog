@@ -59,13 +59,13 @@
     </div>
     <form action="#" method="get">
         <div class="name">
-            <input type="text" name="" id="" placeholder="Name" class="name">
+            <input type="text" name="" id="" placeholder="Name" class="name" v-model="author">
         </div>
         <div class="comment">
-            <input type="text" name="" id="" placeholder="Comment" class="comment">
+            <input type="text" name="" id="" placeholder="Comment" class="comment" v-model="text">
         </div>
         <div class="post">
-            <input type="submit" value="Post">
+            <input @click="sendComment()" type="button" value="Post">
         </div>
     </form>
 
@@ -77,11 +77,14 @@ export default {
     name: 'Comments',
     props: {
         comments: Array,
+        postId: Number,
         
     },
     data() {
         return {
-            currentComments: [],
+            author: '',
+            text: '',
+            parent: null
         }
     },
     created() {
@@ -96,7 +99,27 @@ export default {
                 }
             }
             return allComments;
-        }
+        },
+        async sendComment() {
+            let data = {
+                post: this.postId,
+                author:  this.author,
+                text: this.text,
+                parent: this.parent,
+                children: [],
+            }
+            fetch(`${this.$store.getters.getServerUrl}/add_comment/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }
+            ).then(
+                this.$emit('loadPost')
+            )
+        } 
     },
 }
 </script>
@@ -112,6 +135,10 @@ export default {
         font-size: 21px;
         font-weight: 500;
         line-height: 10px;
+    }
+
+    .post input {
+        
     }
 
 </style>

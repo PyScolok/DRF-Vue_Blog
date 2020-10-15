@@ -134,10 +134,10 @@ MEDIA_ROOT = str(BASE_DIR / 'media')
 
 
 # rest settings
-CORS_ORIGIN_ALLOW_LL = True
-CORS_ORIGIN_WHITELIST = [
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://127.0.0.1:8000",
+    "http://127.0.0.1:8000"
 ]
 
 REST_FRAMEWORK = {
@@ -145,6 +145,7 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DATETIME_FORMAT': "%d %B %Y  %I:%M%p",
+    'DATETIME_INPUT_FORMATS': "%d %B %Y  %I:%M%p",
 }
 
 

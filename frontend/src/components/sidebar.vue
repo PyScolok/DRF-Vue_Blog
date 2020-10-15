@@ -57,16 +57,9 @@ export default {
 
     },
     methods: {
-        async loadPost(slug) {
-            let post = await fetch(
-                `${this.$store.getters.getServerUrl}/post/${slug}`
-            ).then(response => response.json())
-            this.post = post['post']
-            this.$emit('loadPost', {post: this.post})
-        },
         goTo(slug) {
             this.$router.push({name: 'Single', params: {slug: slug}})
-            this.loadPost(slug)
+            this.$emit('loadPost', {slug: slug})
         },
         recentListActivate() {
             this.recentList  = !this.recentList;
@@ -76,9 +69,7 @@ export default {
             this.recentList  = !this.recentList;
             this.popularList = !this.popularList;
         },
-
     }
-
 }
 </script>
 

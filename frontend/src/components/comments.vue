@@ -19,7 +19,7 @@
                         </div>
                         <div class="reply">
                             <p>
-                                <span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
+                                <span><a href="#commentForm" @click="addParent(comment.id, comment.author)"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
                                 <span v-if="comment.children">{{ comment.children.length }}</span>
                                 <span v-else>0</span>
                             </p>
@@ -43,7 +43,7 @@
                                     </div>
                                     <div class="reply">
                                         <p>
-                                            <span><a href="#"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
+                                            <span><a href="#commentForm" @click="addParent(childComment.id, childComment.author)"><i class="fa fa-reply" aria-hidden="true"></i></a></span>
                                             <span v-if="childComment.children">{{ childComment.children.length }}</span>
                                             <span v-else>0</span>
                                         </p>
@@ -57,7 +57,7 @@
         </ul>
 
     </div>
-    <form action="#" method="get">
+    <form action="#" method="get" id="commentForm">
         <div class="name">
             <input type="text" name="" id="" placeholder="Name" class="name" v-model="author">
         </div>
@@ -65,7 +65,7 @@
             <input type="text" name="" id="" placeholder="Comment" class="comment" v-model="text">
         </div>
         <div class="post">
-            <input @click="sendComment()" type="button" value="Post">
+            <input @click="sendComment(); clearForm()" type="button" value="Post">
         </div>
     </form>
 
@@ -93,9 +93,9 @@ export default {
         allCommentsRepresentation(comments) {
             let allComments = [];
             for (let comment of comments) {
-                allComments.push(comment)
+                allComments.push(comment);
                 if (comment.children.length > 0) {
-                    allComments = allComments.concat(this.allCommentsRepresentation(comment.children))
+                    allComments = allComments.concat(this.allCommentsRepresentation(comment.children));
                 }
             }
             return allComments;
@@ -118,8 +118,16 @@ export default {
                 }
             ).then(
                 this.$emit('loadPost')
-            )
-        } 
+            );
+        },
+        clearForm() {
+            this.author = '';
+            this.text = '';
+        }, 
+        addParent(parent, parentName) {
+            this.parent = parent;
+            this.text = parentName + ', '
+        }
     },
 }
 </script>
@@ -135,10 +143,6 @@ export default {
         font-size: 21px;
         font-weight: 500;
         line-height: 10px;
-    }
-
-    .post input {
-        
     }
 
 </style>

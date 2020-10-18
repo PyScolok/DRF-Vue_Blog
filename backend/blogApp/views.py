@@ -14,7 +14,7 @@ class MainView(APIView):
             count = int(request.GET.get('count'))
         else:
             count = 0
-        posts = Post.objects.all()[count:count + 4]
+        posts = Post.objects.all()[count:count + 8]
         posts_serializer = PostListSerializer(posts, many=True)
         return Response({
             "posts": posts_serializer.data,
@@ -38,13 +38,17 @@ class PostDetailView(APIView):
 
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
+        post.views += 1
+        post.save()
         tags = Tag.objects.all()
         recent_posts = Post.objects.all().order_by('-publish')[:5]
         popular_posts = Post.objects.all().order_by('-views')[:5]
+
         post_serializer = PostDetailSerializer(post)
         tags_seerializer = TagListSerializer(tags, many=True)
         recent_posts_serializer = PostListSerializer(recent_posts, many=True)
         popular_posts_serializer = PostListSerializer(popular_posts, many=True)
+
         return Response({
             "post": post_serializer.data,
             "tags": tags_seerializer.data,

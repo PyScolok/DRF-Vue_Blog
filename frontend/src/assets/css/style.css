@@ -629,6 +629,7 @@ section.blog-post-area h4 span.author-name {
     right: -150px;
     text-transform: uppercase;
     width: auto;
+    outline: none;
 }
 .single-blog-area form {
     margin: 50px 0 0;

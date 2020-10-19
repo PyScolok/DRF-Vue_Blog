@@ -24,7 +24,6 @@
                                                 <p class="feedback-item"><span><i class="fa fa-comments" aria-hidden="true"></i> {{ getCommentsCount(post.comments) }}</span></p>
                                             </div>
                                         </div>
-                                        
                                         <div class="content" v-html="post.content"></div>
                                     </div>
                                     <Comments @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
@@ -64,6 +63,11 @@
             this.loadPost();
             
             
+        },
+        beforeRouteUpdate (to, from, next) {
+            this.postSlug = to.params.slug;
+            this.loadPost();
+            next();
         },
         methods: {
            async loadPost() {

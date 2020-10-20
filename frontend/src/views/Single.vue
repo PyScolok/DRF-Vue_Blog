@@ -20,12 +20,16 @@
                                             <h4><span>update: </span><span> {{ post.update }}</span></h4>
                                             <div class="feedback">
                                                 <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes.length }}</span></p>
-                                                <p class="feedback-item"><span><i class="fa fa-eye" aria-hidden="true"></i> {{ post.views }}</span></p>
+                                                <p class="feedback-item"><span><i class="fa fa-eye" aria-hidden="true"></i> {{ post.activity.length }}</span></p>
                                                 <p class="feedback-item"><span><i class="fa fa-comments" aria-hidden="true"></i> {{ getCommentsCount(post.comments) }}</span></p>
                                             </div>
                                         </div>
                                         <div class="content" v-html="post.content"></div>
                                     </div>
+                                    <p>
+                                        <span><button class="like_dislike" @click="sendActivity()"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
+                                        <span><button class="like_dislike" @click="sendActivity()"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button></span>
+                                    </p>
                                     <Comments @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
                                 </div>
                             </div>
@@ -51,18 +55,16 @@
                recentPosts: [],
                popularPosts: [],
                tags: [],
+               like: false,
                loading: false,
            }
         },
         components: {
             Sidebar,
             Comments,
-
         },
         created() {
-            this.loadPost();
-            
-            
+            this.loadPost();   
         },
         beforeRouteUpdate (to, from, next) {
             this.postSlug = to.params.slug;
@@ -79,6 +81,22 @@
                 this.recentPosts = singlePostPage['recent_posts'];
                 this.popularPosts = singlePostPage['popular_posts'];
                 this.loading = true;
+                this.sendActivity()
+            },
+            async sendActivity() {
+                let data = {
+                    post: this.post.id,
+                    like: this.like,
+                }
+                fetch(`${this.$store.getters.getServerUrl}/add_view/`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    }
+                );
             },
             changePostData(data) {
                 this.postSlug = data['slug']
@@ -147,6 +165,14 @@
     .feedback-item {
         margin-right: 10px;
     }
-
+    
+    .like_dislike {
+        color: #989191;
+        font-family: Geometria;
+        font-size: 18px;
+        font-weight: 500;
+        margin-right: 10px;
+    }
+        
 
 </style>

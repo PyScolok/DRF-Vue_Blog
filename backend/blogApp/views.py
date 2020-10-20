@@ -35,15 +35,14 @@ class CategoriesListView(APIView):
 
 class PostDetailView(APIView):
     """Страница подробного представление поста"""
+        
 
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
-        post.views += 1
-        post.save()
         tags = Tag.objects.all()
         recent_posts = Post.objects.all().order_by('-publish')[:5]
-        popular_posts = Post.objects.all().order_by('-views')[:5]
-
+        popular_posts = sorted(Post.objects.all(), key=lambda post: post.activity.count(), reverse=True)[:5]
+        
         post_serializer = PostDetailSerializer(post)
         tags_seerializer = TagListSerializer(tags, many=True)
         recent_posts_serializer = PostListSerializer(recent_posts, many=True)
@@ -67,6 +66,28 @@ class CommentCreateView(APIView):
         if comment.is_valid():
             comment.save()
         return Response(status=201)
+
+
+class AddViewsAndLikesView(APIView):
+    """
+    Добавление лайков и просмторов
+    """
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def post(self, request):
+        activity = ActivityListSerializer(data=request.data)
+        if activity.is_valid():
+            activity.save(ip=self.get_client_ip(request))
+            return Response(status=201)
+        else:
+            return Response(status=400)
 
 
 class PostsByCategoryView(APIView):

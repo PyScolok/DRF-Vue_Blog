@@ -3,7 +3,7 @@ from django import forms
 from django.utils.safestring import mark_safe
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from blogApp.models import Post, Category, Tag, Like, Comment
+from blogApp.models import *
 
 
 class PostAdminForm(forms.ModelForm):
@@ -59,6 +59,13 @@ class LikeAdmin(admin.ModelAdmin):
     list_display = ("post", "ip")
 
 
+class ActivityAdmin(admin.ModelAdmin):
+    """
+    Активность
+    """
+    list_display = ("post", "ip", "like")
+
+
 class CommentAdmin(admin.ModelAdmin):
     """Комментарии"""
 
@@ -71,3 +78,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Like, LikeAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Activity, ActivityAdmin)

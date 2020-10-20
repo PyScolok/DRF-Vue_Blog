@@ -46,7 +46,6 @@ class Post(models.Model):
     image = models.ImageField(upload_to="images/%Y/%m/%d/", blank=True, verbose_name="Изображение")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория", related_name="posts")
     tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги")
-    views = models.IntegerField(default=0, verbose_name="Просмотров")
     publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
     update = models.DateTimeField(auto_now=True, verbose_name="Обновлен")
     is_draft = models.BooleanField(default=False, verbose_name="Черновик?")
@@ -59,11 +58,28 @@ class Post(models.Model):
 
     def get_author_name(self):
         return self.author.username
+
+    def get_activity_count(self):
+        return self.activity.count()
     
     class Meta:
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
+
+
+class Activity(models.Model):
+    """
+    Лайки и просмотры статей
+    """
     
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="activity")
+    ip = models.GenericIPAddressField(verbose_name="IP")
+    like = models.BooleanField(default=False, verbose_name="Лайк")
+
+    class Meta:
+        verbose_name = "Активность"
+        verbose_name_plural = "Активность"
+
 
 class Like(models.Model):
     """Лайки"""

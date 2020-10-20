@@ -21,7 +21,7 @@
                     <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
                     <div class="portfolio-text">
                         <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
-                        <p>By {{ post.author }} <span> | <i class="fa fa-eye" aria-hidden="true"></i> {{ post.views }}</span></p>
+                        <p>By {{ post.author }} <span> | <i class="fa fa-eye" aria-hidden="true"></i> {{ post.activity.length }}</span></p>
                     </div>
                 </div>
             </div>

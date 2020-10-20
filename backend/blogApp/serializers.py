@@ -3,10 +3,27 @@ from rest_framework import serializers
 from blogApp.models import *
 
 
+class ActivityListSerializer(serializers.ModelSerializer):
+    """Лайки и просмотры к посту"""
+
+    class Meta:
+        model = Activity
+        fields = ("post", "like")
+    
+    def create(self, validated_data):
+        activity = Activity.objects.update_or_create(
+            ip=validated_data.get("ip", None),
+            post=validated_data.get("post", None),
+            defaults={'like': validated_data.get("like")} 
+        )
+        return activity
+
+
 class PostListSerializer(serializers.ModelSerializer):
     """Список постов"""
 
     author = serializers.CharField(source="get_author_name")
+    activity = ActivityListSerializer(many=True)
 
     class Meta:
         model = Post
@@ -88,6 +105,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     tags = TagListSerializer(many=True)
     comments = CommentListSerializer(many=True)
     likes = LikeListSerializer(many=True)
+    activity = ActivityListSerializer(many=True)
 
     class Meta:
         model = Post

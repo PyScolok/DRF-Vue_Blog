@@ -38,7 +38,7 @@
 
 <script>
     export default {
-        name: "Posts",
+        name: "PostsList",
         data() {
             return {
                 posts: [],

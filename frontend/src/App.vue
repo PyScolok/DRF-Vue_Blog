@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <Header :categories="categories"/>
+    <HeaderMenu :categories="categories"/>
     <router-view/>
-    <Footer />
+    <FooterMenu />
   </div>
 </template>
 
 <script>
-  import Header from "./components/header";
-  import Footer from "./components/footer";
+  import HeaderMenu from "./components/v-header";
+  import FooterMenu from "./components/v-footer";
   export default {
     name: 'App',
     data() {
@@ -17,8 +17,8 @@
       }
     },
     components: {
-      Header,
-      Footer,
+      HeaderMenu,
+      FooterMenu,
     },
     created() {
       this.loadListCategories()

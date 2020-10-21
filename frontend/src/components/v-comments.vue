@@ -74,7 +74,7 @@
 
 <script>
 export default {
-    name: 'Comments',
+    name: 'CommentsList',
     props: {
         comments: Array,
         postId: Number,

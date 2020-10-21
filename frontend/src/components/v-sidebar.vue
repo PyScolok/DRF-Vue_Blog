@@ -42,7 +42,7 @@
 
 <script>
 export default {
-    name: 'Sidebar',
+    name: 'SidebarMenu',
     props: ['tags', 'recentPosts', 'popularPosts'],
     data() {
         return {

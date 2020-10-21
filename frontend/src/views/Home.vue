@@ -1,24 +1,18 @@
 <template>
     <div class="home">
-        <Banner />
-        <Posts />
+        <HomeBanner />
+        <PostsList />
     </div>
 </template>
 
 <script>
-    import Banner from "../components/banner";
-    import Posts from "../components/posts";
+    import HomeBanner from "../components/v-banner";
+    import PostsList from "../components/v-posts";
     export default {
         name: "Home",
         components: {
-            Banner,
-            Posts,
-        },
-        created() {
-
-        },
-        methods: {
-
+            HomeBanner,
+            PostsList,
         },
     }
 </script>

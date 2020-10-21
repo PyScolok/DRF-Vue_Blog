@@ -19,7 +19,7 @@
                                             <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ post.publish }}</span> in <a class="category">{{ post.category.name }}</a></h4>
                                             <h4><span>update: </span><span> {{ post.update }}</span></h4>
                                             <div class="feedback">
-                                                <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ post.likes.length }}</span></p>
+                                                <p class="feedback-item"><span><i class="fa fa-thumbs-up" aria-hidden="true"></i> {{ getLikesCount(post.activity) }}</span></p>
                                                 <p class="feedback-item"><span><i class="fa fa-eye" aria-hidden="true"></i> {{ post.activity.length }}</span></p>
                                                 <p class="feedback-item"><span><i class="fa fa-comments" aria-hidden="true"></i> {{ getCommentsCount(post.comments) }}</span></p>
                                             </div>
@@ -27,13 +27,13 @@
                                         <div class="content" v-html="post.content"></div>
                                     </div>
                                     <p>
-                                        <span><button class="like_dislike" @click="sendActivity()"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
+                                        <span><button class="like_dislike" @click="sendActivity(true)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
                                         <span><button class="like_dislike" @click="sendActivity()"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button></span>
                                     </p>
-                                    <Comments @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
+                                    <CommentsList @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
                                 </div>
                             </div>
-                            <Sidebar @loadPost='changePostData' :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
+                            <SidebarMenu @loadPost='changePostData' :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
                         </div>
                     </div>
                 </div>
@@ -43,8 +43,8 @@
 </template>
 
 <script>
-    import Sidebar from '../components/sidebar'
-    import Comments from '../components/comments'
+    import SidebarMenu from '../components/v-sidebar'
+    import CommentsList from '../components/v-comments'
     export default {
         name: "Single",
         props: ['slug'],
@@ -60,11 +60,11 @@
            }
         },
         components: {
-            Sidebar,
-            Comments,
+            SidebarMenu,
+            CommentsList,
         },
         created() {
-            this.loadPost();   
+            this.loadPost();
         },
         beforeRouteUpdate (to, from, next) {
             this.postSlug = to.params.slug;
@@ -83,10 +83,10 @@
                 this.loading = true;
                 this.sendActivity()
             },
-            async sendActivity() {
+            async sendActivity(like=false) {
                 let data = {
                     post: this.post.id,
-                    like: this.like,
+                    like: like,
                 }
                 fetch(`${this.$store.getters.getServerUrl}/add_view/`,
                     {
@@ -99,20 +99,23 @@
                 );
             },
             changePostData(data) {
-                this.postSlug = data['slug']
-                this.loadPost()
+                this.postSlug = data['slug'];
+                this.loadPost();
             },
             getCommentsCount(comments) {
                 let commentsCount = 0;
                 for (let comment of comments) {
-                    commentsCount ++
+                    commentsCount ++;
                     if (comment.children.length > 0) {
-                        commentsCount += this.getCommentsCount(comment.children)
+                        commentsCount += this.getCommentsCount(comment.children);
                     }
                 }
                 return commentsCount;
+            },
+            getLikesCount(post) {
+                const result = post.filter(act => act.like);
+                return result.length;
             }
-            
         },
     }
 </script>
@@ -167,12 +170,25 @@
     }
     
     .like_dislike {
-        color: #989191;
+        border: medium none;
+        border-radius: 0;
+        color: #000;
+        display: inline-block;
         font-family: Geometria;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 500;
-        margin-right: 10px;
+        padding: 21px;
+        text-transform: uppercase;
+        width: 50%;
+        outline: none;
     }
-        
 
+    .like_dislike.is-checked {
+        background: #40c4ff;
+        color: #fff;
+    }
+    .like_dislike:hover {
+        background: #40c4ff;
+        color: #fff;
+    }
 </style>

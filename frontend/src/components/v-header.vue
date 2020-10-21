@@ -28,7 +28,7 @@
 
 <script>
     export default {
-        name: "Header",
+        name: "HeaderMenu",
         props: ['categories'],
 
     }   

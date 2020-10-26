@@ -35,7 +35,6 @@ class CategoriesListView(APIView):
 
 class PostDetailView(APIView):
     """Страница подробного представление поста"""
-        
 
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
@@ -82,7 +81,7 @@ class AddViewsAndLikesView(APIView):
         return ip
 
     def post(self, request):
-        activity = ActivityListSerializer(data=request.data)
+        activity = ActivityCreateSerializer(data=request.data)
         if activity.is_valid():
             activity.save(ip=self.get_client_ip(request))
             return Response(status=201)

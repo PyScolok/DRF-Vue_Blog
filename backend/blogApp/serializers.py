@@ -3,8 +3,8 @@ from rest_framework import serializers
 from blogApp.models import *
 
 
-class ActivityListSerializer(serializers.ModelSerializer):
-    """Лайки и просмотры к посту"""
+class ActivityCreateSerializer(serializers.ModelSerializer):
+    """Добавление лайков и просмотры к посту"""
 
     class Meta:
         model = Activity
@@ -17,6 +17,14 @@ class ActivityListSerializer(serializers.ModelSerializer):
             defaults={'like': validated_data.get("like")} 
         )
         return activity
+
+
+class ActivityListSerializer(serializers.ModelSerializer):
+    """Список активности"""
+
+    class Meta:
+        model = Activity
+        fields = "__all__"
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -71,12 +79,13 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     children = RecursiveChildrenSerializer(many=True)
     parent = serializers.CharField(source="get_parent_comment_author")
+    parent_id = serializers.CharField(source="get_parent_comment_id")
 
 
     class Meta:
         list_serializer_class = FilterCommentListSerializer 
         model = Comment
-        fields = ["id", "author", "text", "publish", 'children', 'parent']
+        fields = ["id", "author", "text", "publish", 'children', 'parent', "parent_id"]
     
 
 class CommentCreateSerializer(serializers.ModelSerializer):

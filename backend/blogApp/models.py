@@ -58,9 +58,6 @@ class Post(models.Model):
 
     def get_author_name(self):
         return self.author.username
-
-    def get_activity_count(self):
-        return self.activity.count()
     
     class Meta:
         verbose_name = "Пост"
@@ -74,7 +71,7 @@ class Activity(models.Model):
     
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="activity")
     ip = models.GenericIPAddressField(verbose_name="IP")
-    like = models.BooleanField(default=False, verbose_name="Лайк")
+    like = models.BooleanField(default=False, null=True, verbose_name="Лайк")
 
     class Meta:
         verbose_name = "Активность"
@@ -107,6 +104,10 @@ class Comment(models.Model):
     def get_parent_comment_author(self):
         if self.parent:
             return self.parent.author
+
+    def get_parent_comment_id(self):
+        if self.parent:
+            return self.parent.id
 
     class Meta:
         verbose_name = "Комментарий"

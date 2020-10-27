@@ -14,7 +14,7 @@ class MainView(APIView):
             count = int(request.GET.get('count'))
         else:
             count = 0
-        posts = Post.objects.all()[count:count + 8]
+        posts = Post.objects.filter().order_by('-publish')[count:count + 8]
         posts_serializer = PostListSerializer(posts, many=True)
         return Response({
             "posts": posts_serializer.data,
@@ -93,15 +93,31 @@ class PostsByCategoryView(APIView):
     """Список постов относящихся к оперделенной категории"""
 
     def get(self, request, slug):
-        posts = Post.objects.filter(category__slug=slug)
+        if request.GET.get('count'):
+            count = int(request.GET.get('count'))
+        else:
+            count = 0
+        posts = Post.objects.filter(category__slug=slug).order_by('-publish')[count:count + 8]
+        category_name = Category.objects.get(slug__exact=slug).name
         serializer = PostListSerializer(posts, many=True)
-        return Response(serializer.data)
+        return Response({
+            'posts': serializer.data,
+            'categoryName': category_name,
+        })
 
 
 class PostsByTagView(APIView):
     """Список фильмов относящихся к определённому тегу"""
 
     def get(self, request, slug):
-        posts = Post.objects.filter(tags__slug=slug)
+        if request.GET.get('count'):
+            count = int(request.GET.get('count'))
+        else:
+            count = 0
+        posts = Post.objects.filter(tags__slug=slug).order_by('-publish')[count:count + 8]
+        tag_name = Tag.objects.get(slug__exact=slug).name
         serializer = PostListSerializer(posts, many=True)
-        return Response(serializer.data)
+        return Response({
+            'posts': serializer.data,
+            'tagName': tag_name,
+        })

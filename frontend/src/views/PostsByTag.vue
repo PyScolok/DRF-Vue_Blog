@@ -1,5 +1,6 @@
 <template>
-    <div class="wrapper" id="posts">
+    <div class="wrapper" id="posts-by-tag">
+        <h3 class="tag-title">Posts tagged {{ this.tagName }}</h3>
         <section class="blog-post-area">
             <div class="container">
                 <div v-if="this.masonryIsActive" v-masonry item-selector=".col-md-3" horizontal-order="true" class="row">
@@ -38,9 +39,11 @@
 
 <script>
     export default {
-        name: "PostsList",
+        name: "PostsByTag",
+        props: ['slug'],
         data() {
             return {
+                tagName: '',
                 posts: [],
                 newposts: [],
                 masonryIsActive: false,
@@ -57,13 +60,14 @@
         methods: {
             async loadListPosts() {
                 let listPosts = await fetch(
-                    `${this.$store.getters.getServerUrl}/main`
+                    `${this.$store.getters.getServerUrl}/tag/${this.slug}`
                 ).then(response => response.json());
                 this.posts = listPosts["posts"];
+                this.tagName = listPosts["tagName"]
             },
             async loadAdditionalPosts() {
                 let adPosts = await fetch(
-                    `${this.$store.getters.getServerUrl}/main?count=${this.posts.length}`
+                    `${this.$store.getters.getServerUrl}/tag/${this.slug}?count=${this.posts.length}`
                 ).then(response => response.json());
                 this.newposts = adPosts['posts'];
                 this.posts = this.posts.concat(this.newposts);
@@ -88,6 +92,15 @@
 </script>
 
 <style>
+    .tag-title {
+        font-family: Geometria;
+        font-size: 34px;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: 25px;
+    }
+
     .single-post p {
         max-height: 228px;
         overflow: hidden;
@@ -123,6 +136,5 @@
         border: none;
         text-transform: uppercase;
         outline: none;
-        
-    }
+        }
 </style>

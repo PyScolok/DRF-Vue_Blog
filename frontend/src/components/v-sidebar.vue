@@ -10,7 +10,7 @@
                     <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
                     <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
                     <div class="portfolio-text">
-                        <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
+                        <h5><a @click="goToPost(post.slug)">{{ post.title }}</a></h5> 
                         <p>By {{ post.author }} <span>|</span>{{ post.publish }}</p>
                     </div>
                 </div>
@@ -20,14 +20,14 @@
                     <img v-if="post.image" v-bind:src="'http://127.0.0.1:8000'+ post.image" alt="">
                     <img v-else src="http://placehold.it/72x72/33bee5/ffffff/&text=NOPHOTO"/>
                     <div class="portfolio-text">
-                        <h5><a @click="goTo(post.slug)">{{ post.title }}</a></h5> 
+                        <h5><a @click="goToPost(post.slug)">{{ post.title }}</a></h5> 
                         <p>By {{ post.author }} <span> | <i class="fa fa-eye" aria-hidden="true"></i> {{ post.activity.length }}</span></p>
                     </div>
                 </div>
             </div>
             <div class="tags">
                 <h2 class="sidebar-title">Tags</h2>
-                <p v-for="tag in tags" :key="tag.id"><a href="#">{{ tag.name }}</a></p>
+                <p v-for="tag in tags" :key="tag.id"><a @click="goToTag(tag.slug)">{{ tag.name }}</a></p>
             </div>
             <div class="newsletter">
                 <h2 class="sidebar-title">Subscribe To oUR nEWSLETTER</h2>
@@ -49,17 +49,15 @@ export default {
             recentList: true,
             popularList: false,
             post: {},
-
         }
     },
-    created() {
-        
-
-    },
     methods: {
-        goTo(slug) {
+        goToPost(slug) {
             this.$router.push({name: 'Single', params: {slug: slug}})
             this.$emit('loadPost', {slug: slug})
+        },
+        goToTag(slug) {
+            this.$router.push({name: 'PostsByTag', params: {slug: slug}})
         },
         recentListActivate() {
             this.recentList  = !this.recentList;
@@ -74,6 +72,10 @@ export default {
 </script>
 
 <style>
+    .wrapper a {
+        cursor: pointer;
+    }
+
     .button-group button {
         outline: none;
     }
@@ -85,5 +87,4 @@ export default {
     i {
         margin-left: 10px;
     }
-
 </style>

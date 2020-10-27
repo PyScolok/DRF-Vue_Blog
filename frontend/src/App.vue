@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HeaderMenu :categories="categories"/>
+    <HeaderMenu />
     <router-view/>
     <FooterMenu />
   </div>
@@ -11,26 +11,10 @@
   import FooterMenu from "./components/v-footer";
   export default {
     name: 'App',
-    data() {
-      return {
-        categories: [],
-      }
-    },
     components: {
       HeaderMenu,
       FooterMenu,
     },
-    created() {
-      this.loadListCategories()
-    },
-    methods: {
-      async loadListCategories() {
-        let listCategories = await fetch(
-          `${this.$store.getters.getServerUrl}/categories`
-        ).then(response => response.json())
-        this.categories = listCategories["categories"]
-      }
-    }
   }
 </script>
 

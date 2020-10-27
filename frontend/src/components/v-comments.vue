@@ -5,13 +5,13 @@
 
         <ul class="commentlist">
             <li v-for="comment in comments" :key="comment.id">
-                <article class="comment">
+                <article class="comment" :id="comment.id">
                     <header class="comment-author">
                         <img src="img/author-1.jpg" alt="">
                     </header>
                     <section class="comment-details">
                         <div class="author-name">
-                            <h5>{{ comment.author }}</h5>
+                            <h5 class="name">{{ comment.author }}</h5>
                             <p>{{ comment.publish }}</p>
                         </div>
                         <div class="comment-body">
@@ -29,13 +29,13 @@
                 <div v-if="comment.children">
                     <ul  v-for="childComment in allCommentsRepresentation(comment.children)" :key="childComment.id" class="children">
                         <li>
-                            <article class="comment">
+                            <article class="comment" :id="childComment.id">
                                 <header class="comment-author">
                                     <img src="img/author-2.jpg" alt="">
                                 </header>
                                 <section class="comment-details">
                                     <div class="author-name">
-                                        <h5>{{ childComment.author }} <span>replied to {{ childComment.parent }}</span></h5>
+                                        <h5 class="name">{{ childComment.author }} <span>replied to</span> <a @click="showParent(childComment.parent_id)" :href="`#${childComment.parent_id}`">{{ childComment.parent }}</a></h5>
                                         <p>{{ childComment.publish }}</p>
                                     </div>
                                     <div class="comment-body">
@@ -127,6 +127,15 @@ export default {
         addParent(parent, parentName) {
             this.parent = parent;
             this.text = parentName + ', '
+        },
+        showParent(id) {
+            let parentCommentBlock = document.getElementById(id)
+            let nameText = parentCommentBlock.querySelector('.name')
+            nameText.classList.add('blink')
+            setTimeout(this.hideParent, 4000, nameText)
+        },
+        hideParent(el) {
+            el.classList.remove('blink')
         }
     },
 }
@@ -143,6 +152,28 @@ export default {
         font-size: 21px;
         font-weight: 500;
         line-height: 10px;
+    }
+
+    .author-name span {
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    .blink {
+        -webkit-animation: blink 2s linear infinite;
+        animation: blink 2s linear infinite;
+    }
+
+    @-webkit-keyframes blink {
+        0% { color: rgb(64, 196, 255); }
+        50% { color: rgb(255, 255, 255); }
+        100% { color: rgb(64, 196, 255); }
+    }
+
+    @keyframes blink {
+        0% { color: rgb(64, 196, 255); }
+        50% { color: rgb(250, 250, 250); }
+        100% { color: rgb(64, 196, 255); }
     }
 
 </style>

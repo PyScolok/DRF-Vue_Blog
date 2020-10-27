@@ -45,7 +45,7 @@ class Post(models.Model):
     content = models.TextField(verbose_name="Контент")
     image = models.ImageField(upload_to="images/%Y/%m/%d/", blank=True, verbose_name="Изображение")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория", related_name="posts")
-    tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги")
+    tags = models.ManyToManyField(Tag, blank=True, verbose_name="Теги", related_name="posts")
     publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
     update = models.DateTimeField(auto_now=True, verbose_name="Обновлен")
     is_draft = models.BooleanField(default=False, verbose_name="Черновик?")

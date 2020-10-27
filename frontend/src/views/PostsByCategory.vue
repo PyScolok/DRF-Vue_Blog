@@ -1,5 +1,6 @@
 <template>
-    <div class="wrapper" id="posts">
+    <div class="wrapper" id="posts-by-tag">
+        <h3 class="tag-title">{{ this.categoryName }}</h3>
         <section class="blog-post-area">
             <div class="container">
                 <div v-if="this.masonryIsActive" v-masonry item-selector=".col-md-3" horizontal-order="true" class="row">
@@ -38,15 +39,21 @@
 
 <script>
     export default {
-        name: "PostsList",
+        name: "PostsByCategory",
+        props: ['slug'],
         data() {
             return {
+                categoryName: '',
                 posts: [],
                 newposts: [],
                 masonryIsActive: false,
             }
         },
+        beforeCreated() {
+            console.log(this.categoryName)
+        },
         created() {
+            console.log(this.categoryName)
             this.initialStateMasonry();
             this.loadListPosts();
             window.addEventListener('resize', this.activateMasonry);
@@ -57,13 +64,14 @@
         methods: {
             async loadListPosts() {
                 let listPosts = await fetch(
-                    `${this.$store.getters.getServerUrl}/main`
+                    `${this.$store.getters.getServerUrl}/category/${this.slug}`
                 ).then(response => response.json());
                 this.posts = listPosts["posts"];
+                this.categoryName = listPosts["categoryName"]
             },
             async loadAdditionalPosts() {
                 let adPosts = await fetch(
-                    `${this.$store.getters.getServerUrl}/main?count=${this.posts.length}`
+                    `${this.$store.getters.getServerUrl}/category/${this.slug}?count=${this.posts.length}`
                 ).then(response => response.json());
                 this.newposts = adPosts['posts'];
                 this.posts = this.posts.concat(this.newposts);
@@ -88,6 +96,15 @@
 </script>
 
 <style>
+    .tag-title {
+        font-family: Geometria;
+        font-size: 34px;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: 25px;
+    }
+
     .single-post p {
         max-height: 228px;
         overflow: hidden;
@@ -123,6 +140,5 @@
         border: none;
         text-transform: uppercase;
         outline: none;
-        
-    }
+        }
 </style>

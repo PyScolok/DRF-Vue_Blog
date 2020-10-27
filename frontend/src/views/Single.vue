@@ -13,7 +13,7 @@
                                         </div>
                                         <h2>{{ post.title }}</h2>
                                         <div class="tags">
-                                            <p v-for="tag in post.tags" :key="tag.id"><a href="#">{{ tag.name }}</a></p>
+                                            <p v-for="tag in post.tags" :key="tag.id"><a @click="goToTag(tag.slug)">{{ tag.name }}</a></p>
                                         </div>
                                         <div v-if="loading" class="info">
                                             <h4><span>by: <span class="author-name">{{ post.author }}</span></span><span> {{ post.publish }}</span> in <a class="category">{{ post.category.name }}</a></h4>
@@ -55,8 +55,8 @@
                recentPosts: [],
                popularPosts: [],
                tags: [],
-               like: false,
                loading: false,
+               like: false,
            }
         },
         components: {
@@ -83,7 +83,7 @@
                 this.loading = true;
                 this.sendActivity()
             },
-            async sendActivity(like=false) {
+            async sendActivity(like=null) {
                 let data = {
                     post: this.post.id,
                     like: like,
@@ -115,7 +115,10 @@
             getLikesCount(post) {
                 const result = post.filter(act => act.like);
                 return result.length;
-            }
+            },
+            goToTag(slug) {
+                this.$router.push({name: 'PostsByTag', params: {slug: slug}})
+        },
         },
     }
 </script>

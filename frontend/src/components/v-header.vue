@@ -14,7 +14,7 @@
                                 <a class="nav-item" href="/">Home</a>
                                 <a class="nav-item" href="">Categories ▼
                                     <div class="dropdown">
-                                        <a v-for="category in categories" :key="category.id" class="nav-item last" href="">{{ category.name }}</a>
+                                        <a v-for="category in categories" :key="category.id" class="nav-item last" @click="goToCategory(category.slug)">{{ category.name }}</a>
                                     </div>
                                 </a>
                             </div>
@@ -29,7 +29,25 @@
 <script>
     export default {
         name: "HeaderMenu",
-        props: ['categories'],
+        data() {
+            return {
+                categories: [],
+            }
+        },
+        created() {
+            this.loadListCategories()
+        },
+        methods: {
+            async loadListCategories() {
+                let listCategories = await fetch(
+                `${this.$store.getters.getServerUrl}/categories`
+                ).then(response => response.json())
+                this.categories = listCategories["categories"]
+            },
+            goToCategory(slug) {
+                this.$router.push({name: 'PostsByCategory', params: {slug: slug}})
+            },
+        },
 
     }   
 </script>

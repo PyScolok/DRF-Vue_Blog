@@ -6,16 +6,16 @@
                     <div class="col-md-12">
                         <div class="footer-bg">
                             <div class="row">
-                                <div class="col-md-9">
+                                <div class="pages">
                                     <div class="footer-menu">
                                         <ul>
-                                            <li><a href="#">Home</a></li>
-                                            <li><a href="#">About</a></li>
+                                            <li><a href="http://localhost:8080/">Home</a></li>
+                                            <li><a href="http://localhost:8080/about/">About</a></li>
                                             <li><a href="#">Contact</a></li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="socials">
                                     <div class="footer-icon">
                                         <p>
                                             <a href="https://vk.com/nrgizerbot"><i class="fa fa-vk" aria-hidden="true"></i></a>
@@ -42,5 +42,11 @@
 <style>
     .wrapper footer {
         margin-top: 15px;
+    }
+    .pages {
+        float: left;
+    }
+    .socials {
+        float: right;
     }
 </style>

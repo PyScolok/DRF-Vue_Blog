@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Single from '../views/Single.vue';
 import PostsByTag from '../views/PostsByTag.vue';
 import PostsByCategory from '../views/PostsByCategory.vue';
+import About from '../views/About.vue';
 
 Vue.use(VueRouter);
 
@@ -12,6 +13,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
+    },
+    {
+        path: '/about',
+        name: 'AboutPage',
+        component: About,
     },
     {
         path: '/:slug',

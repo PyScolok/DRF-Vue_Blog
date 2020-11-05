@@ -741,7 +741,7 @@ section.blog-post-area h4 span.author-name {
     width: 50%;
     margin-right: 20px;
 }
-.single-blog-area .newsletter input[type="submit"] {
+.single-blog-area .newsletter input[type="button"] {
     width: 40%;
     background: #40c4ff;
     color: #fff;

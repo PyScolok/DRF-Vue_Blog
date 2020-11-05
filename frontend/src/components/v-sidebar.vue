@@ -32,8 +32,8 @@
             <div class="newsletter">
                 <h2 class="sidebar-title">Subscribe To oUR nEWSLETTER</h2>
                 <form action="#" method="post">
-                    <input type="email" name="" id="" placeholder="Email">
-                    <input type="submit" value="Subscribe">
+                    <input type="email" name="" id="" placeholder="Email" v-model="email">
+                    <input @click="subscribe(); clearForm()" type="button" value="Subscribe">
                 </form>
             </div>
         </div>
@@ -49,6 +49,7 @@ export default {
             recentList: true,
             popularList: false,
             post: {},
+            email: '',
         }
     },
     methods: {
@@ -67,6 +68,23 @@ export default {
             this.recentList  = !this.recentList;
             this.popularList = !this.popularList;
         },
+        async subscribe() {
+            let data = {
+                email: this.email,
+            }
+            fetch(`${this.$store.getters.getServerUrl}/add_subscriber/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                }
+            );
+        },
+        clearForm() {
+            this.email = '';
+        }, 
     }
 }
 </script>

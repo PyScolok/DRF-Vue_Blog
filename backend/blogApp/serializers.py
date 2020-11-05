@@ -119,3 +119,13 @@ class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         exclude = ["is_draft", ]
+
+
+class SubscriberCreateSerializer(serializers.ModelSerializer):
+    """
+    Подписка на рассылку
+    """
+
+    class Meta:
+        model = Contact
+        fields = '__all__'

@@ -57,7 +57,7 @@
         </ul>
 
     </div>
-    <form action="#" method="get" id="commentForm">
+    <form action="#" method="post" id="commentForm">
         <div class="name">
             <input type="text" name="" id="" placeholder="Name" class="name" v-model="author">
         </div>

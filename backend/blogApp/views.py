@@ -121,3 +121,16 @@ class PostsByTagView(APIView):
             'posts': serializer.data,
             'tagName': tag_name,
         })
+
+
+class AddSubscriberView(APIView):
+    """
+    Добавление подписчика на рассылку Email
+    """
+    def post(self, request):
+        email = SubscriberCreateSerializer(data=request.data)
+        if email.is_valid():
+            email.save()
+            return Response(status=201)
+        else:
+            return Response(status=400)

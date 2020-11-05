@@ -113,3 +113,16 @@ class Comment(models.Model):
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
         ordering = ["publish"]
+
+
+class Contact(models.Model):
+    """Подписка на рассылку по Email"""
+
+    email = models.EmailField(verbose_name='Email')
+
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'

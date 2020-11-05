@@ -92,6 +92,9 @@
 </script>
 
 <style>
+    #post-by-tag {
+       flex-grow: 1;
+    }
     .tag-title {
         font-family: Geometria;
         font-size: 34px;

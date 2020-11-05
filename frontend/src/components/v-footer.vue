@@ -9,9 +9,9 @@
                                 <div class="pages">
                                     <div class="footer-menu">
                                         <ul>
-                                            <li><a href="http://localhost:8080/">Home</a></li>
-                                            <li><a href="http://localhost:8080/about/">About</a></li>
-                                            <li><a href="#">Contact</a></li>
+                                            <li><a @click="goTo('HomePage')">Home</a></li>
+                                            <li><a @click="goTo('AboutPage')">About</a></li>
+                                            <li><a @click="goTo('ContactPage')">Contact</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -36,12 +36,21 @@
 <script>
     export default {
         name: "FooterMenu",
+        methods: {
+            goTo(name) {
+                this.$router.push({name: name})
+            }
+        }
     }
 </script>
 
 <style>
+    a {
+        cursor: pointer;
+    }
     .wrapper footer {
         margin-top: 15px;
+        flex-grow: 0;
     }
     .pages {
         float: left;

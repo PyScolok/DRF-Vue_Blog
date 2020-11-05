@@ -1,28 +1,34 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router';
-import Home from '../views/Home.vue';
-import Single from '../views/Single.vue';
+import HomePage from '../views/HomePage.vue';
+import SinglePost from '../views/SinglePost.vue';
 import PostsByTag from '../views/PostsByTag.vue';
 import PostsByCategory from '../views/PostsByCategory.vue';
-import About from '../views/About.vue';
+import AboutPage from '../views/AboutPage.vue';
+import ContactPage from '../views/ContactPage.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Home,
+        name: 'HomePage',
+        component: HomePage,
     },
     {
         path: '/about',
         name: 'AboutPage',
-        component: About,
+        component: AboutPage,
+    },
+    {
+        path: '/contacts',
+        name: 'ContactPage',
+        component: ContactPage
     },
     {
         path: '/:slug',
         name: 'Single',
-        component: Single,
+        component: SinglePost,
         props: true,
     },
     {

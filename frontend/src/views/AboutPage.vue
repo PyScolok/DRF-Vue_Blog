@@ -34,6 +34,11 @@
     
 
 <style>
+
+    #about {
+       flex-grow: 1;
+    }
+
     .drop_caps {
         color: #40c4ff;
         float: left;

@@ -23,5 +23,11 @@
   @import "assets/css/style.css";
   @import "assets/css/font-awesome.min.css";
   @import "assets/css/responsive.css";
+  #app {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
 
 </style>

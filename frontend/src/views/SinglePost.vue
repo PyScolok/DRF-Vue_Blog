@@ -123,6 +123,10 @@
     }
 </script>
 <style scoped>
+    #single {
+       flex-grow: 1;
+    }
+
     .post-img {
         margin-top: 40px;
     }

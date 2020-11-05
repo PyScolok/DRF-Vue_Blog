@@ -1,6 +1,6 @@
 <template>
-    <div class="wrapper" id="posts-by-tag">
-        <h3 class="tag-title">{{ this.categoryName }}</h3>
+    <div class="wrapper" id="posts-by-category">
+        <h3 class="category-title">{{ this.categoryName }}</h3>
         <section class="blog-post-area">
             <div class="container">
                 <div v-if="this.masonryIsActive" v-masonry item-selector=".col-md-3" horizontal-order="true" class="row">
@@ -96,7 +96,11 @@
 </script>
 
 <style>
-    .tag-title {
+    #post-by-category {
+       flex-grow: 1;
+    }
+
+    .category-title {
         font-family: Geometria;
         font-size: 34px;
         font-weight: 700;

@@ -1,6 +1,11 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.urls import reverse
+
+from .utilities import send_new_post_notification
+
+
 
 class Category(models.Model):
     """Категории"""
@@ -126,3 +131,11 @@ class Contact(models.Model):
     class Meta:
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
+
+
+def post_save_dispatcher(sender, **kwargs):
+    if kwargs['created']:
+        send_new_post_notification(kwargs['instance'])
+
+
+post_save.connect(post_save_dispatcher, sender=Post)

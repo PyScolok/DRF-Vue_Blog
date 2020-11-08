@@ -27,8 +27,7 @@
                                         <div class="content" v-html="post.content"></div>
                                     </div>
                                     <p>
-                                        <span><button class="like_dislike" v-bind:class="{ 'is-checked': userLikedThis }" @click="sendActivityLike(true)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
-                                        <span><button  class="like_dislike" @click="sendActivityLike(false)"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button></span>
+                                        <span><button class="like_dislike" v-bind:class="{ 'is-checked': userLikedThis }" @click="sendActivity(!userLikedThis)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
                                     </p>
                                     <CommentsList @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
                                 </div>
@@ -54,11 +53,11 @@
                userLikedThis: false,
                postSlug: this.slug,
                post: {},
+               postId: 0,
                recentPosts: [],
                popularPosts: [],
                tags: [],
                loading: false,
-               activity: {},
            }
         },
         components: {
@@ -73,6 +72,11 @@
             this.loadPost();
             next();
         },
+        watch: {
+            postId() {
+                this.sendActivity()
+            },
+        },
         methods: {
            async loadPost() {
                let singlePostPage = await fetch(
@@ -80,11 +84,11 @@
                 ).then(response => response.json());
                 this.clientIp = singlePostPage['ip'];
                 this.post = singlePostPage['post'];
+                this.postId = singlePostPage['post']['id'];
                 this.tags = singlePostPage['tags'];
                 this.recentPosts = singlePostPage['recent_posts'];
                 this.popularPosts = singlePostPage['popular_posts'];
                 this.loading = true;
-                this.sendActivityView();
                 if (this.post.activity.find(this.isUserLiked)) {
                    this.userLikedThis = true;
                 }
@@ -92,24 +96,12 @@
                     this.userLikedThis = false;
                 }
             },
-            async sendActivityView() {
-                let data = {
-                    post: this.post.id
-                }
-                fetch(`${this.$store.getters.getServerUrl}/add_view/`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    }
-                );
-            },
-            async sendActivityLike(like) {
+            async sendActivity(like=null) {
                 let data = {
                     post: this.post.id,
-                    like: like
+                }
+                if (!(like === null)) {
+                    data.like = like;
                 }
                 fetch(`${this.$store.getters.getServerUrl}/add_view/`,
                     {
@@ -120,7 +112,9 @@
                         body: JSON.stringify(data)
                     }
                 );
-                this.loadPost()
+                if (!(like === null)) {
+                    this.loadPost();
+                }
             },
             isUserLiked(element) {
                 if(element.ip === this.clientIp && element.like){
@@ -212,15 +206,11 @@
         font-weight: 500;
         padding: 21px;
         text-transform: uppercase;
-        width: 50%;
+        width: 100%;
         outline: none;
     }
 
     .is-checked {
-        background: #40c4ff;
-        color: #fff;
-    }
-    .like_dislike:hover {
         background: #40c4ff;
         color: #fff;
     }

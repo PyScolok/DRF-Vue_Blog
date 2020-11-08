@@ -76,7 +76,7 @@ class Activity(models.Model):
     
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="activity")
     ip = models.GenericIPAddressField(verbose_name="IP")
-    like = models.BooleanField(default=False, null=True, verbose_name="Лайк")
+    like = models.BooleanField(default=False, verbose_name="Лайк")
 
     class Meta:
         verbose_name = "Активность"

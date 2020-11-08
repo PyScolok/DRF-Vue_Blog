@@ -55,7 +55,6 @@ export default {
     methods: {
         goToPost(slug) {
             this.$router.push({name: 'Single', params: {slug: slug}})
-            this.$emit('loadPost', {slug: slug})
         },
         goToTag(slug) {
             this.$router.push({name: 'PostsByTag', params: {slug: slug}})

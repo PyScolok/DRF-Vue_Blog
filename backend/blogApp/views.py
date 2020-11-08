@@ -32,9 +32,16 @@ class CategoriesListView(APIView):
         })
 
 
-
 class PostDetailView(APIView):
     """Страница подробного представление поста"""
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
 
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
@@ -48,6 +55,7 @@ class PostDetailView(APIView):
         popular_posts_serializer = PostListSerializer(popular_posts, many=True)
 
         return Response({
+            "ip": self.get_client_ip(request),
             "post": post_serializer.data,
             "tags": tags_seerializer.data,
             "recent_posts": recent_posts_serializer.data,
@@ -87,7 +95,7 @@ class AddViewsAndLikesView(APIView):
             return Response(status=201)
         else:
             return Response(status=400)
-
+    
 
 class PostsByCategoryView(APIView):
     """Список постов относящихся к оперделенной категории"""

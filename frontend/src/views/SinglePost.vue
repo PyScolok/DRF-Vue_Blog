@@ -27,13 +27,13 @@
                                         <div class="content" v-html="post.content"></div>
                                     </div>
                                     <p>
-                                        <span><button class="like_dislike" @click="sendActivity(true)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
-                                        <span><button class="like_dislike" @click="sendActivity()"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button></span>
+                                        <span><button class="like_dislike" v-bind:class="{ 'is-checked': userLikedThis }" @click="sendActivityLike(true)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
+                                        <span><button  class="like_dislike" @click="sendActivityLike(false)"><i class="fa fa-thumbs-down" aria-hidden="true"></i></button></span>
                                     </p>
                                     <CommentsList @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
                                 </div>
                             </div>
-                            <SidebarMenu @loadPost='changePostData' :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
+                            <SidebarMenu :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
                         </div>
                     </div>
                 </div>
@@ -50,13 +50,15 @@
         props: ['slug'],
         data() {
            return {
+               clientIp:'',
+               userLikedThis: false,
                postSlug: this.slug,
                post: {},
                recentPosts: [],
                popularPosts: [],
                tags: [],
                loading: false,
-               like: false,
+               activity: {},
            }
         },
         components: {
@@ -76,17 +78,23 @@
                let singlePostPage = await fetch(
                     `${this.$store.getters.getServerUrl}/post/${this.postSlug}`
                 ).then(response => response.json());
+                this.clientIp = singlePostPage['ip'];
                 this.post = singlePostPage['post'];
                 this.tags = singlePostPage['tags'];
                 this.recentPosts = singlePostPage['recent_posts'];
                 this.popularPosts = singlePostPage['popular_posts'];
                 this.loading = true;
-                this.sendActivity()
+                this.sendActivityView();
+                if (this.post.activity.find(this.isUserLiked)) {
+                   this.userLikedThis = true;
+                }
+                else {
+                    this.userLikedThis = false;
+                }
             },
-            async sendActivity(like=null) {
+            async sendActivityView() {
                 let data = {
-                    post: this.post.id,
-                    like: like,
+                    post: this.post.id
                 }
                 fetch(`${this.$store.getters.getServerUrl}/add_view/`,
                     {
@@ -98,9 +106,26 @@
                     }
                 );
             },
-            changePostData(data) {
-                this.postSlug = data['slug'];
-                this.loadPost();
+            async sendActivityLike(like) {
+                let data = {
+                    post: this.post.id,
+                    like: like
+                }
+                fetch(`${this.$store.getters.getServerUrl}/add_view/`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    }
+                );
+                this.loadPost()
+            },
+            isUserLiked(element) {
+                if(element.ip === this.clientIp && element.like){
+                    return true
+                }
             },
             getCommentsCount(comments) {
                 let commentsCount = 0;
@@ -117,8 +142,9 @@
                 return result.length;
             },
             goToTag(slug) {
+                
                 this.$router.push({name: 'PostsByTag', params: {slug: slug}})
-        },
+            },
         },
     }
 </script>
@@ -190,7 +216,7 @@
         outline: none;
     }
 
-    .like_dislike.is-checked {
+    .is-checked {
         background: #40c4ff;
         color: #fff;
     }

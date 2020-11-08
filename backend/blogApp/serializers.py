@@ -11,11 +11,17 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
         fields = ("post", "like")
     
     def create(self, validated_data):
-        activity = Activity.objects.update_or_create(
-            ip=validated_data.get("ip", None),
-            post=validated_data.get("post", None),
-            defaults={'like': validated_data.get("like")} 
-        )
+        ip = validated_data.get("ip", None)
+        post = validated_data.get("post", None)
+        like = validated_data.get("like", None)
+        try:
+            activity = Activity.objects.get(ip=ip, post=post)
+            if like != None:
+                activity.like = like
+            activity.save()
+        except Activity.DoesNotExist:
+            activity = Activity(ip=ip, post=post)
+            activity.save()
         return activity
 
 

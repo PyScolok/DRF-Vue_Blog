@@ -14,6 +14,6 @@ def send_new_post_notification(post):
     subscribers_queryset= models.Contact.objects.all()
     subscribers = [subscriber.email for subscriber in subscribers_queryset]
     subject = render_to_string('email/new_post_letter_subject.txt')
-    body = render_to_string('email/new_post_letter_body.txt', context)
-    send_mail(subject, body, 'oskolok2013@gmail.com', subscribers)
+    html_body = render_to_string('email/new_post_letter_body.html', context)
+    send_mail(subject, body, 'oskolok2013@gmail.com', subscribers, html_message=html_body)
 

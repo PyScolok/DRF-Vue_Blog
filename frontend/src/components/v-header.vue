@@ -5,7 +5,7 @@
                 <div class="row header-menu">
                     <div class="col-md-2">
                         <div class="logo">
-                            <h2>Blog</h2>
+                            <h2>BlogApp</h2>
                         </div>
                     </div>
                     <div class="col-md-10">

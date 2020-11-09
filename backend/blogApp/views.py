@@ -1,9 +1,9 @@
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 
-
-from blogApp.models import *
-from blogApp.serializers import *
+from .models import *
+from .serializers import *
+from .utilities import get_client_ip
 
 
 class MainView(APIView):
@@ -35,14 +35,6 @@ class CategoriesListView(APIView):
 class PostDetailView(APIView):
     """Страница подробного представление поста"""
 
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
     def get(self, request, slug):
         post = Post.objects.get(slug__exact=slug)
         tags = Tag.objects.all()
@@ -55,11 +47,11 @@ class PostDetailView(APIView):
         popular_posts_serializer = PostListSerializer(popular_posts, many=True)
 
         return Response({
-            "ip": self.get_client_ip(request),
+            "ip": get_client_ip(request),
             "post": post_serializer.data,
             "tags": tags_seerializer.data,
-            "recent_posts": recent_posts_serializer.data,
-            "popular_posts": popular_posts_serializer.data,
+            "recentPosts": recent_posts_serializer.data,
+            "popularPosts": popular_posts_serializer.data,
         })
 
 
@@ -68,7 +60,7 @@ class CommentCreateView(APIView):
     Добавление комментария
     """
     
-    def post(self, request):
+    def post(self, request, slug):
         comment = CommentCreateSerializer(data=request.data)
         if comment.is_valid():
             comment.save()
@@ -80,18 +72,10 @@ class AddViewsAndLikesView(APIView):
     Добавление лайков и просмторов
     """
 
-    def get_client_ip(self, request):
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
-
-    def post(self, request):
+    def post(self, request, slug):
         activity = ActivityCreateSerializer(data=request.data)
         if activity.is_valid():
-            activity.save(ip=self.get_client_ip(request))
+            activity.save(ip=get_client_ip(request))
             return Response(status=201)
         else:
             return Response(status=400)

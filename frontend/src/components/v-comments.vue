@@ -2,7 +2,6 @@
   <div class="wrapper" id="comments">
     <div class="commententries">
         <h3>Comments</h3>
-
         <ul class="commentlist">
             <li v-for="comment in comments" :key="comment.id">
                 <article class="comment" :id="comment.id">
@@ -78,6 +77,7 @@ export default {
     props: {
         comments: Array,
         postId: Number,
+        postSlug: String,
         
     },
     data() {
@@ -91,6 +91,7 @@ export default {
     },
     methods:{
         allCommentsRepresentation(comments) {
+            // Представляет всех потомков всех порядков для первичных комментариев.
             let allComments = [];
             for (let comment of comments) {
                 allComments.push(comment);
@@ -108,7 +109,7 @@ export default {
                 parent: this.parent,
                 children: [],
             }
-            fetch(`${this.$store.getters.getServerUrl}/add_comment/`,
+            fetch(`${this.$store.getters.getServerUrl}/post/${this.postSlug}/add_comment/`,
                 {
                     method: "POST",
                     headers: {
@@ -125,10 +126,12 @@ export default {
             this.text = '';
         }, 
         addParent(parent, parentName) {
+            // Подставляет имя родителя при ответе на комментарий.
             this.parent = parent;
             this.text = parentName + ', '
         },
         showParent(id) {
+            // Подсвечивает комментарий родителя при щелчке на имя автора родительского комментария.
             let parentCommentBlock = document.getElementById(id)
             let nameText = parentCommentBlock.querySelector('.name')
             nameText.classList.add('blink')

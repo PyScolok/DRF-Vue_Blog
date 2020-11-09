@@ -2,8 +2,8 @@
   <div class="wrapper" id="sidebar">
         <div class="col-md-4">
             <div class="button-group filters-button-group">
-                <button @click="recentListActivate()" v-bind:class="{ 'is-checked': recentList }" class="button">Recent</button>
-                <button @click="popularListActivate()" v-bind:class="{ 'is-checked': popularList }" class="button">popular</button>
+                <button @click="activate()" v-bind:class="{ 'is-checked': recentList }" class="button">Recent</button>
+                <button @click="activate()" v-bind:class="{ 'is-checked': popularList }" class="button">popular</button>
             </div>
             <div v-if="recentList" class="grid">
                 <div v-for="post in recentPosts" :key="post.id" class="portfolio-item recent">
@@ -59,11 +59,7 @@ export default {
         goToTag(slug) {
             this.$router.push({name: 'PostsByTag', params: {slug: slug}})
         },
-        recentListActivate() {
-            this.recentList  = !this.recentList;
-            this.popularList = !this.popularList;
-        },
-        popularListActivate() {
+        activate() {
             this.recentList  = !this.recentList;
             this.popularList = !this.popularList;
         },

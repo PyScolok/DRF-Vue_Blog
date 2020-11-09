@@ -50,7 +50,7 @@
             }
         },
         created() {
-            this.initialStateMasonry();
+            this.activateMasonry();
             this.loadListPosts();
             window.addEventListener('resize', this.activateMasonry);
         },
@@ -77,11 +77,6 @@
                     this.masonryIsActive = true;
                 } else if (window.innerWidth < 992 && this.masonryIsActive) {
                     this.masonryIsActive = false;
-                }
-            },
-            initialStateMasonry() {
-                if (window.innerWidth >= 992 && !this.masonryIsActive) {
-                    this.masonryIsActive = true;
                 }
             },
             goToPost(slug) {

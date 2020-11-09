@@ -16,9 +16,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse("category", kwargs={"slug": self.slug})
-
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -33,8 +30,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-    def get_absolute_url(self):
-        return reverse("tag", kwargs={"slug": self.slug})
 
     class Meta:
         verbose_name = "Тег"
@@ -58,9 +53,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
-    def get_absolute_url(self):
-        return reverse("post", kwargs={"slug": self.slug})
-
     def get_author_name(self):
         return self.author.username
     
@@ -81,17 +73,6 @@ class Activity(models.Model):
     class Meta:
         verbose_name = "Активность"
         verbose_name_plural = "Активность"
-
-
-class Like(models.Model):
-    """Лайки"""
-
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="likes")
-    ip = models.GenericIPAddressField(verbose_name="IP")
-
-    class Meta:
-        verbose_name = "Лайк"
-        verbose_name_plural = "Лайки"
     
 
 class Comment(models.Model):

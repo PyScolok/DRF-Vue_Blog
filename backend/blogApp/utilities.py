@@ -17,3 +17,11 @@ def send_new_post_notification(post):
     html_body = render_to_string('email/new_post_letter_body.html', context)
     send_mail(subject, body, 'oskolok2013@gmail.com', subscribers, html_message=html_body)
 
+def get_client_ip(request):
+    """Получени ip клиента"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip

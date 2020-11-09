@@ -53,12 +53,6 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name", )}
 
 
-class LikeAdmin(admin.ModelAdmin):
-    """Лайки"""
-
-    list_display = ("post", "ip")
-
-
 class ActivityAdmin(admin.ModelAdmin):
     """
     Активность
@@ -76,7 +70,6 @@ class CommentAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(Like, LikeAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(Contact)

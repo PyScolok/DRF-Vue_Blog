@@ -29,7 +29,7 @@
                                     <p>
                                         <span><button class="like_dislike" v-bind:class="{ 'is-checked': userLikedThis }" @click="sendActivity(!userLikedThis)"><i class="fa fa-thumbs-up" aria-hidden="true"></i></button></span>
                                     </p>
-                                    <CommentsList @loadPost='loadPost' :comments="post.comments" :postId="post.id" />
+                                    <CommentsList @loadPost='loadPost' :comments="post.comments" :postId="post.id" :postSlug="post.slug"/>
                                 </div>
                             </div>
                             <SidebarMenu :tags="tags" :recentPosts="recentPosts" :popularPosts="popularPosts"/>
@@ -86,8 +86,8 @@
                 this.post = singlePostPage['post'];
                 this.postId = singlePostPage['post']['id'];
                 this.tags = singlePostPage['tags'];
-                this.recentPosts = singlePostPage['recent_posts'];
-                this.popularPosts = singlePostPage['popular_posts'];
+                this.recentPosts = singlePostPage['recentPosts'];
+                this.popularPosts = singlePostPage['popularPosts'];
                 this.loading = true;
                 if (this.post.activity.find(this.isUserLiked)) {
                    this.userLikedThis = true;
@@ -103,7 +103,7 @@
                 if (!(like === null)) {
                     data.like = like;
                 }
-                fetch(`${this.$store.getters.getServerUrl}/add_view/`,
+                fetch(`${this.$store.getters.getServerUrl}/post/${this.postSlug}/add_view/`,
                     {
                         method: "POST",
                         headers: {
@@ -136,7 +136,6 @@
                 return result.length;
             },
             goToTag(slug) {
-                
                 this.$router.push({name: 'PostsByTag', params: {slug: slug}})
             },
         },

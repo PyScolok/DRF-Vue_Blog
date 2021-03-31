@@ -1,10 +1,8 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
-from django.urls import reverse
 
 from .utilities import send_new_post_notification
-
 
 
 class Category(models.Model):
@@ -12,7 +10,7 @@ class Category(models.Model):
 
     name = models.CharField(max_length=75, verbose_name="Название")
     slug = models.SlugField(max_length=75, verbose_name="URL", unique=True)
-    
+
     def __str__(self):
         return self.name
 
@@ -29,7 +27,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-    
 
     class Meta:
         verbose_name = "Тег"
@@ -52,10 +49,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def get_author_name(self):
         return self.author.username
-    
+
     class Meta:
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
@@ -65,7 +62,7 @@ class Activity(models.Model):
     """
     Лайки и просмотры статей
     """
-    
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE, verbose_name="Пост", related_name="activity")
     ip = models.GenericIPAddressField(verbose_name="IP")
     like = models.BooleanField(default=False, verbose_name="Лайк")
@@ -73,7 +70,7 @@ class Activity(models.Model):
     class Meta:
         verbose_name = "Активность"
         verbose_name_plural = "Активность"
-    
+
 
 class Comment(models.Model):
     """Комментарии"""
@@ -82,7 +79,8 @@ class Comment(models.Model):
     author = models.CharField(max_length=75, verbose_name="Автор")
     text = models.TextField(verbose_name="Текст")
     publish = models.DateTimeField(auto_now_add=True, verbose_name="Опубликован")
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name="Родитель", related_name="children")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, verbose_name="Родитель",
+                               related_name="children")
 
     def __str__(self):
         return f"Комментарий {self.author} к {self.post}"
@@ -108,13 +106,13 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.email
-    
+
     class Meta:
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакты'
 
 
-def post_save_dispatcher(sender, **kwargs):
+def post_save_dispatcher(**kwargs):
     if kwargs['created']:
         send_new_post_notification(kwargs['instance'])
 

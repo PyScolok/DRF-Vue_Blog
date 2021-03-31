@@ -3,13 +3,14 @@ from django import forms
 from django.utils.safestring import mark_safe
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
-from blogApp.models import *
+from .models import *
 
 
 class PostAdminForm(forms.ModelForm):
     """Виджет ckeditor"""
 
     content = forms.CharField(widget=CKEditorUploadingWidget())
+
     class Meta:
         model = Post
         fields = "__all__"

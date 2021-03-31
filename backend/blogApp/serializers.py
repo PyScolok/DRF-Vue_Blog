@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blogApp.models import *
+from .models import *
 
 
 class ActivityCreateSerializer(serializers.ModelSerializer):
@@ -9,14 +9,14 @@ class ActivityCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ("post", "like")
-    
+
     def create(self, validated_data):
         ip = validated_data.get("ip", None)
         post = validated_data.get("post", None)
         like = validated_data.get("like", None)
         try:
             activity = Activity.objects.get(ip=ip, post=post)
-            if like != None:
+            if like is not None:
                 activity.like = like
             activity.save()
         except Activity.DoesNotExist:
@@ -74,7 +74,7 @@ class FilterCommentListSerializer(serializers.ListSerializer):
     """
     Фильтрация комментов по наличию родителя
     """
-    
+
     def to_representation(self, data):
         data = data.filter(parent=None)
         return super().to_representation(data)
@@ -87,18 +87,17 @@ class CommentListSerializer(serializers.ModelSerializer):
     parent = serializers.CharField(source="get_parent_comment_author")
     parent_id = serializers.CharField(source="get_parent_comment_id")
 
-
     class Meta:
-        list_serializer_class = FilterCommentListSerializer 
+        list_serializer_class = FilterCommentListSerializer
         model = Comment
         fields = ["id", "author", "text", "publish", 'children', 'parent', "parent_id"]
-    
+
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     """
     Добавление комментария
     """
-    
+
     class Meta:
         model = Comment
         fields = "__all__"
